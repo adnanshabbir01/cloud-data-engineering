@@ -84,3 +84,33 @@ left join sales.customers b
 on a.customer_id = b.customer_id
 
 
+select p.product_name, o.order_id
+from production.products P
+inner join sales.order_items o
+on p.product_id = o.product_id;
+
+select
+a.product_name,
+b.order_id,
+c.order_date,
+b.item_id
+from production.products a
+left join sales.order_items b
+on a.product_id = b.product_id
+left join sales.orders c
+on b.order_id = c.order_id;
+
+
+select 
+a.product_name,
+b.order_id
+from production.products a
+right join sales.order_items b
+on a.product_id = b.product_id;
+
+select 
+a.product_name,
+b.order_id
+from sales.order_items b
+right join  production.products a
+on a.product_id = b.product_id;
