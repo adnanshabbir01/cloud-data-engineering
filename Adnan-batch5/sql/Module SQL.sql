@@ -1,0 +1,86 @@
+-- Percentage
+select top 1 percent * from production.products
+
+-- Offset and Fetch
+-- Offsets skips and Fetch next fetches the desired next rows
+-- Does not work without Order by
+-- Fetch next does not work with Offset
+select * from production.products order by list_price asc
+offset 10 rows 
+fetch next 10 rows only;
+
+select distinct city, state 
+from sales.customers
+
+select distinct state, city
+from sales.customers
+
+select distinct phone from sales.customers
+select * from production.products where category_id = 1 and list_price >= 400
+select * from production.products where model_year = 2018 and list_price > 300
+
+
+select * from production.products where brand_id in (1,2) and list_price > 1000
+select * from production.products where (brand_id = 1 or brand_id = 2) and list_price > 300
+
+select * from production.products where list_price in (2999.9, 2599.9, 1199.99, 2799.99)
+select * from production.products where list_price between 1199.99 and 2999.9
+
+select * from sales.orders where order_date between '2016-01-01' and '2018-01-01'
+
+--	Combining 2 columns and aliasing
+select first_name + ' ' + last_name as full_name
+from sales.customers
+
+-- Logical operators are used with wildcards
+select * from sales.customers where first_name like 's%t'
+and first_name like 's%'            
+
+-- To skip the first letter 
+select * from sales.customers where first_name like '_a%';
+
+ create schema hr;
+ go
+
+ create table hr.candidates (
+ id int primary key identity,
+ fullname varchar(100) not null);
+
+ create table hr.employees (
+ id int primary key identity,
+ fullname  varchar(100) not null);
+
+
+
+ INSERT INTO hr.candidates (fullname)
+VALUES 
+('Ali Khan'),
+('Sara Ahmed'),
+('John Smith'),
+('Ayesha Malik');
+
+
+INSERT INTO hr.employees (fullname)
+VALUES 
+('Ali Khan'),
+('Emily Johnson'),
+('Hassan Raza'),
+('Sara Ahmed');
+
+select a.fullname
+from hr.employees a 
+inner join hr.candidates b
+on a.fullname = b.fullname
+
+select distinct a.category_id, b.category_name
+from production.products a
+inner join production.categories b
+on a.category_id = b.category_id
+--order by product_name desc;
+
+select first_name + ' ' + last_name as full_name, order_status, order_date
+from sales.orders a 
+left join sales.customers b
+on a.customer_id = b.customer_id
+
+
