@@ -114,3 +114,27 @@ b.order_id
 from sales.order_items b
 right join  production.products a
 on a.product_id = b.product_id;
+
+select a.store_id, b.store_name, a.quantity, a.product_id, c.product_name
+from production.stocks a
+left join sales.stores b
+on a.store_id = b.store_id
+left join production.products c
+on a.product_id = c.product_id;
+
+select * from production.products
+cross join sales.order_items;
+
+-- Self Join
+select a.staff_id from 
+sales.staffs a 
+join sales.staffs b
+on a.staff_id = b.staff_id;
+
+select a.first_name, a.manager_id, b.first_name, b.staff_id
+from sales.staffs a
+left join sales.staffs b
+on a.manager_id = b.staff_id
+
+-- FULL JOIN AND FULL OUTER JOIN IS SAME
+-- CROSS JOIN MAKES CARDINALITY 
