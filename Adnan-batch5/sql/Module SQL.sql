@@ -138,3 +138,12 @@ on a.manager_id = b.staff_id
 
 -- FULL JOIN AND FULL OUTER JOIN IS SAME
 -- CROSS JOIN MAKES CARDINALITY 
+
+select a.customer_id, a.first_name, b.customer_id, b.first_name
+from sales.customers a
+left join sales.customers b
+on a.city = b.city
+where (
+a.customer_id != b.customer_id)
+and a.first_name = 'Albany'
+order by a.city;
