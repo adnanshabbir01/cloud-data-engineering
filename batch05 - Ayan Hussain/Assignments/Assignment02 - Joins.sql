@@ -13,9 +13,10 @@
 -- ============================================================
 
 -- Write your query below:
-
-
-
+select p.product_name, p.list_price, c.category_name
+from production.products p
+left join production.categories c
+on p.category_id = c.category_id;
 
 -- ============================================================
 --  Question 2
@@ -26,8 +27,11 @@
 -- ============================================================
 
 -- Write your query below:
-
-
+select c.first_name + ' ' + c.last_name as last_name, o.order_id, o.order_date
+from sales.customers c
+inner join sales.orders o
+on c.customer_id = o.customer_id
+order by order_date desc;
 
 
 -- ============================================================
@@ -40,9 +44,13 @@
 -- ============================================================
 
 -- Write your query below:
-
-
-
+select p.product_name, p.list_price, c.category_name, b.brand_name
+from production.products p
+left join production.categories c
+on p.category_id = c.category_id
+left join production.brands b
+on p.brand_id = b.brand_id
+order by b.brand_name asc, p.product_name asc;
 
 -- ============================================================
 --  Question 4
@@ -55,9 +63,11 @@
 -- ============================================================
 
 -- Write your query below:
-
-
-
+select p.product_name, order_id, o.item_id
+from production.products p
+left join sales.order_items o
+on p.product_id = o.product_id
+order by order_id asc;
 
 -- ============================================================
 --  Question 5
@@ -68,9 +78,12 @@
 -- ============================================================
 
 -- Write your query below:
-
-
-
+select p.product_id, p.product_id
+from production.products p
+left join sales.order_items o
+on p.product_id = o.product_id
+where order_id is null
+order by order_id asc;
 
 -- ============================================================
 --  Question 6
@@ -83,9 +96,10 @@
 -- ============================================================
 
 -- Write your query below:
-
-
-
+select s.store_name, s.store_id, o.order_id, o.order_id
+from sales.stores s
+left join sales.orders o
+on s.store_id = o.store_id;
 
 -- ============================================================
 --  Question 7
@@ -98,9 +112,10 @@
 -- ============================================================
 
 -- Write your query below:
-
-
-
+select a.first_name + ' ' + a.last_name as staff_name, b.first_name + ' ' + b.last_name as manager_name
+from sales.staffs a
+inner join sales.staffs b
+on a.manager_id = b.staff_id;
 
 -- ============================================================
 --  Question 8
@@ -113,9 +128,9 @@
 -- ============================================================
 
 -- Write your query below:
-
-
-
+select a.store_name, b.brand_name
+from sales.stores a
+cross join production.brands b;
 
 -- ============================================================
 --  Question 9
@@ -128,3 +143,11 @@
 -- ============================================================
 
 -- Write your query below:
+select c.first_name + ' ' + c.last_name as full_name, o.order_id, o.order_date, p.product_name, p.list_price
+from sales.orders o
+left join sales.customers c
+on o.customer_id = c.customer_id
+left join sales.order_items oi
+on o.order_id = oi.order_id
+left join production.products p
+on oi.product_id = p.product_id;
