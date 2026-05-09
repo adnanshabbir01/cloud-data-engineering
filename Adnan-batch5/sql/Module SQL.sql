@@ -147,3 +147,66 @@ where (
 a.customer_id != b.customer_id)
 and a.first_name = 'Albany'
 order by a.city;
+
+
+-- Aggregations
+
+select customer_id, year(order_date) as order_year, count(order_id) as order_count
+from sales.orders 
+where customer_id in (2,11,25)
+group by customer_id, year(order_date);
+
+
+select city, count(customer_id) as cust_count
+from sales.customers
+group by city;
+
+select category_id, max(list_price) as max_price, min(list_price) as min_price
+from production.products
+group by category_id;
+
+select order_id, sum(quantity * list_price * (1-discount)) as net_amount
+from sales.order_items  
+group by order_id
+having sum(quantity * list_price * (1-discount)) > 5000;
+
+select customer_id, year(order_date) as order_year, count(order_id) as order_count
+from sales.orders 
+--where customer_id in (2,11,25)
+group by customer_id, year(order_date)
+having count(order_id) > 1;
+
+-- order_count will be executed in the end so having does not know the alias value order_count 
+-- that is why we use count(order_id) in having
+-- different clauses can be used in select and having
+
+select category_id, avg(list_price) as avg_price
+from production.products
+group by category_id
+having avg(list_price) between 500 and 1000;
+
+
+select * from sales.orders 
+where customer_id in (
+select customer_id 
+from sales.customers where city = 'New York');
+
+-- we can write max 32 subqueries in a query
+select product_name, list_price
+from production.products
+where list_price > (
+select avg(list_price)
+from production.products where brand_id in (select brand_id from production.brands where brand_name in ('Electra','Trek')));
+-- we should always select only one column in sub query
+
+select product_name 
+from production.products
+where category_id in 
+(select category_id from production.categories
+where category_name in ('Comfort Bicycles','Electric Bikes'));
+
+
+select * from production.products 
+where product_id in 
+(select product_id
+from production.stocks where quantity > 25);
