@@ -185,7 +185,6 @@ from production.products
 group by category_id
 having avg(list_price) between 500 and 1000;
 
-
 select * from sales.orders 
 where customer_id in (
 select customer_id 
@@ -210,3 +209,45 @@ select * from production.products
 where product_id in 
 (select product_id
 from production.stocks where quantity > 25);
+
+-- Union vs union all
+-- Union (skips duplicates)
+-- Union (returns all data)
+-- No. of columns should be same
+
+select t.first_name, t.last_name, count(*) as cnt
+from
+(select first_name, last_name, email
+from sales.customers
+union all 
+select first_name, last_name, 'null' as email
+from sales.staffs)t
+group by t.first_name, t.last_name
+having count(*) > 1
+
+-- Intersect (fetches the common data)
+select first_name, last_name
+from sales.customers
+intersect
+select first_name, last_name
+from sales.staffs
+
+-- How does except work?
+
+
+-- CTE (Common Table Expressions)
+-- It allows to store the temporary result
+-- Syntax
+-- with cte_name (column_names) as (
+-- cte_query)
+-- sql statement; creates the table only at the time of query running
+
+
+select a.staff_id, a.first_name + ' ' + a.last_name as full_name, sum(quantity * list_price * (1-discount)) as net_amount
+from sales.staffs a
+left join sales.orders b
+on a.staff_id = b.staff_id
+left join sales.order_items c
+on b.order_id = c.order_id
+group by a.staff_id, a.first_name + ' ' + a.last_name
+order by net_amount;
