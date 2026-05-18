@@ -251,3 +251,81 @@ left join sales.order_items c
 on b.order_id = c.order_id
 group by a.staff_id, a.first_name + ' ' + a.last_name
 order by net_amount;
+
+-- Constraints 
+-- Primary Key, Foreign Key, Not Null Constraint, Unique Constraint, Check Constraint
+ -- We create Primary Key, Foreign Key for referential integrity between tables
+
+
+ -- Create vendor_groups table
+CREATE TABLE vendor_groups (
+    group_id INT PRIMARY KEY,
+    group_name VARCHAR(100) NOT NULL
+);
+
+-- Create vendors table
+CREATE TABLE vendors (
+    vendor_id INT PRIMARY KEY,
+    vendor_name VARCHAR(100) NOT NULL,
+    contact_email VARCHAR(100),
+    group_id INT,
+    FOREIGN KEY (group_id) REFERENCES vendor_groups(group_id)
+);
+
+-- Insert rows into vendor_groups
+INSERT INTO vendor_groups (group_id, group_name)
+VALUES
+(1, 'Electronics'),
+(2, 'Furniture'),
+(3, 'Office Supplies');
+
+-- Insert rows into vendors
+INSERT INTO vendors (vendor_id, vendor_name, contact_email, group_id)
+VALUES
+(101, 'Tech World', 'techworld@example.com', 1),
+(102, 'Modern Furniture', 'modernfurniture@example.com', 2),
+(103, 'Office Hub', 'officehub@example.com', 3);
+
+-- Referential Integrity 
+-- on update, on delete
+
+-- on update no action
+-- on update cascade
+-- on update set null
+-- on update set default
+
+-- on delete no action
+-- on delete cascade
+-- on delete set null
+-- on delete set default
+
+-- not null
+
+-- unique constraint
+-- primary key cannot have any null values, unique can have only one null value
+
+
+create table personal_data (
+ cnic nvarchar(20) primary key,
+ first_name nvarchar(20),
+ last_name nvarchar(20),
+ phone int,
+ constraint unique_phone unique(phone),
+ email nvarchar(20),
+ constraint unique_email unique(email)
+);
+
+-- check constraint
+
+select order_status, count(*)
+from sales.orders 
+group by order_status;
+
+select order_id, 
+sum(quantity * list_price) as order_value, 
+case when sum(quantity * list_price) <= 1000 then 'Low' 
+when sum(quantity * list_price) > 1000 and sum(quantity * list_price) <= 5000 
+then 'Medium' when sum(quantity * list_price) > 5000 then 'High' end as order_priority  
+from sales.order_items
+group by order_id
+order by order_id asc;
