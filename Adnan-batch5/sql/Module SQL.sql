@@ -329,3 +329,69 @@ then 'Medium' when sum(quantity * list_price) > 5000 then 'High' end as order_pr
 from sales.order_items
 group by order_id
 order by order_id asc;
+
+select category_name, count(product_id) as product_cnt
+from production.categories a
+left join production.products b 
+on a.category_id = b.category_id
+group by category_name
+
+-- Stored Procedures
+CREATE PROCEDURE product_list
+AS
+BEGIN
+select product_name, list_price
+from production.products
+order by product_name;
+END;
+
+-- Parameters in Stored Procedures
+CREATE OR ALTER PROCEDURE product_list (@min_list_price AS DECIMAL, @max_list_price AS DECIMAL)
+AS
+BEGIN
+select product_name, list_price
+from production.products
+where list_price > @min_list_price and list_price < @max_list_price
+order by product_name;
+END;
+
+EXEC product_list 500, 1000
+
+-- Default Parameter 
+CREATE OR ALTER PROCEDURE product_list (@min_list_price AS DECIMAL = 0, @max_list_price AS DECIMAL = 2500) -- If no parameter provided, then this would be default value
+AS
+BEGIN
+select product_name, list_price
+from production.products
+where list_price > @min_list_price and list_price < @max_list_price
+order by product_name;
+END;
+
+-- Like in parameter of Stored Procedures
+CREATE OR ALTER PROCEDURE product_name (@name as nvarchar(255)) -- If no parameter provided, then this would be default value
+AS
+BEGIN
+select product_id, product_name, list_price
+from production.products
+where product_name like '%' + @name + '%';
+END;
+
+EXEC product_name 'trek'
+
+-- Variables
+DECLARE @model_year int
+SET @model_year = 2016
+
+
+SELECT product_id, product_name
+from production.products
+where model_year = @model_year
+
+declare @product_name nvarchar(255);
+set @product_name = (select product_name from production.products where product_id = '5')
+-- storing result from a query to a variable 
+
+
+DECLARE @sales int;
+SELECT @sales = sum(list_price * quantity)
+from sales.order_items 
